@@ -1,0 +1,388 @@
+[
+    {
+        "id": "bbbd03f4.c46cf",
+        "type": "tab",
+        "label": "Share InfluxDB",
+        "disabled": true,
+        "info": ""
+    },
+    {
+        "id": "3be4870e.d1b658",
+        "type": "websocket in",
+        "z": "bbbd03f4.c46cf",
+        "name": "Hubitat Event Socket Prod",
+        "server": "",
+        "client": "2dc2e126.6a7bae",
+        "x": 177,
+        "y": 95,
+        "wires": [
+            [
+                "b567620.453d2a"
+            ]
+        ]
+    },
+    {
+        "id": "b770b416.7af528",
+        "type": "function",
+        "z": "bbbd03f4.c46cf",
+        "name": "Set Influx Data",
+        "func": "\nconst ACTIVE = 'active';\nconst CLOSED = 'closed';\nconst DETECTED = 'detected';\nconst FOLLOW_SCHEDULE = 'follow schedule';\nconst GOOD = 'good';\nconst HEATING = 'heating';\nconst LOCKED = 'locked';\nconst MUTED = 'muted';\nconst OFF = 'off';\nconst ON = 'on';\nconst OPEN = 'open';\nconst PRESENT = 'present';\nconst PUSHED = 'pushed';\nconst SLEEPING = 'sleeping';\nconst TOUCHED = 'touched';\nconst WET = 'wet';\n\nvar v = {\n    'value' : null,\n    'isBinary' : null\n};\n\nif(msg.name == \"acceleration\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"alarm\") {\n    v.value = (msg.value != OFF ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"button\") {\n    v.value = (msg.value != PUSHED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"carbonMonoxide\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"consumableStatus\") {\n    v.value = (msg.value == GOOD ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"contact\") {\n    v.value = (msg.value == OPEN ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"door\") {\n    v.value = (msg.value != OPEN ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"lock\") {\n    v.value = (msg.value == LOCKED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"motion\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"mute\") {\n    v.value = (msg.value == MUTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"presence\") {\n    v.value = (msg.value == PRESENT ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"shock\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"sleeping\") {\n    v.value = (msg.value == SLEEPING ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"smoke\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"sound\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"switch\") {\n    v.value = (msg.value == ON ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"tamper\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatMode\") {\n    v.value = (msg.value != OFF ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatFanMode\") {\n    v.value = (msg.value != OFF ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatOperatingState\") {\n    v.value = (msg.value == HEATING ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatSetpointMode\") {\n    v.value = (msg.value != FOLLOW_SCHEDULE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"touch\") {\n    v.value = (msg.value != TOUCHED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"optimisation\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"windowFunction\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"water\") {\n    v.value = (msg.value == WET ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"windowShade\") {\n    v.value = (msg.value == CLOSED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"threeAxis\") {\n    var vz = msg.value.split(',');\n    var x = vz[0];\n    var y = vz[1];\n    var z = vz[2];\n    v.value = {\n        x: vz[0],\n        y: vz[1],\n        z: vz[2]\n    };\n    v.isBinary = false;\n}\nelse if (msg.value.match(/.*[^0-9\\.,-].*/)) { // match if any characters are not digits, period, comma, or hyphen.\n    v.value = '\"' + msg.value + '\"';\n    v.isBinary = false;\n}\n\n// Catch any other general numerical event (carbonDioxide, power, energy, humidity, level, temperature, ultravioletIndex, voltage, etc).\nelse {\n    v.value = Number(msg.value);\n    v.isBinary = false;\n}\nif (msg.name == \"threeAxis\"){\n    msg.payload = [\n        {\n            measurement: msg.name,\n            fields: {\n                valueX: v.value.x,\n                valueY: v.value.y,\n                valueZ: v.value.z\n            },\n            tags:{\n                hub: msg.hubId ? msg.hubId : \"HE1\",\n                deviceId: msg.deviceId,\n                displayName: msg.displayName,\n                unit: msg.unit\n            },\n            timestamp: new Date()\n        }\n    ]\n} else if (v.isBinary)\n{\n    msg.payload = [\n        {\n            measurement: msg.name,\n            fields: {\n                value: msg.value,\n                valueBinary: v.value\n            },\n            tags:{\n                hub: msg.hubId ? msg.hubId : \"HE1\",\n                deviceId: msg.deviceId,\n                displayName: msg.displayName,\n                unit: msg.unit\n            },\n            timestamp: new Date()\n        }\n    ]    \n}\nelse\n{\n    msg.payload = [\n        {\n            measurement: msg.name,\n            fields: {\n                value: (Array.isArray(v.value) ? v.value.join(',') : v.value),\n            },\n            tags:{\n                hub: msg.hubId ? msg.hubId : \"HE1\",\n                deviceId: msg.deviceId,\n                displayName: msg.displayName,\n                unit: msg.unit\n            },\n            timestamp: new Date()\n        }\n    ]\n}\n//console.log(util.inspect(msg, {showHidden: false, depth: null}))\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 588,
+        "y": 96,
+        "wires": [
+            [
+                "b57f888.d44e978"
+            ]
+        ]
+    },
+    {
+        "id": "b57f888.d44e978",
+        "type": "influxdb batch",
+        "z": "bbbd03f4.c46cf",
+        "influxdb": "3de4678f.7ce138",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "",
+        "x": 805,
+        "y": 96,
+        "wires": []
+    },
+    {
+        "id": "b567620.453d2a",
+        "type": "filter",
+        "z": "bbbd03f4.c46cf",
+        "name": "Filter attributes",
+        "property": "name",
+        "propertyType": "msg",
+        "asArray": false,
+        "itemProperty": "",
+        "itemPropertyType": "item",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "acceleration",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "alarm",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "battery",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "presence",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "carbonMonoxide",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "carbonDioxide",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "contact",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "door",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "energy",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "humidity",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "illuminance",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "lock",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "motion",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "status",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "steps",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "goal",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "pH",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "power",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "voltage",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "current",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "powerFactor",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "presence",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "pressure",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "shock",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "lqi",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "rssi",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "sleeping",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "smoke",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "tamper",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "temperature",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "heatingSetpoint",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "thermostatSetpoint",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "thermostatMode",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "thermostatFanMode",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "thermostatOperatingState",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "thermostatSetpointMode",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "scheduledSetpoint",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "optimisation",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "windowFunction",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "threeAxis",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "touch",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "ultravioletIndex",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "contact",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "voltage",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "water",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "windowShade",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "battery_mV",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "medianD",
+                "vt": "str",
+                "output": 1
+            },
+            {
+                "t": "eq",
+                "v": "lastDataPoint1",
+                "vt": "str",
+                "output": 1
+            }
+        ],
+        "checkall": "false",
+        "outputs": 1,
+        "x": 390.01220703125,
+        "y": 95.0048828125,
+        "wires": [
+            [
+                "b770b416.7af528"
+            ]
+        ]
+    },
+    {
+        "id": "2dc2e126.6a7bae",
+        "type": "websocket-client",
+        "z": "",
+        "path": "ws://192.168.10.153/eventsocket",
+        "tls": "",
+        "wholemsg": "true"
+    },
+    {
+        "id": "3de4678f.7ce138",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "hubitat",
+        "name": "",
+        "usetls": false,
+        "tls": ""
+    }
+]
