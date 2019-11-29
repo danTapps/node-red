@@ -1,58 +1,58 @@
 [
     {
-        "id": "bbbd03f4.c46cf",
+        "id": "97173ff6.e5ddd",
         "type": "tab",
-        "label": "Share InfluxDB",
-        "disabled": true,
+        "label": "Flow 4",
+        "disabled": false,
         "info": ""
     },
     {
-        "id": "3be4870e.d1b658",
+        "id": "e7bbc295.74f1f",
         "type": "websocket in",
-        "z": "bbbd03f4.c46cf",
+        "z": "97173ff6.e5ddd",
         "name": "Hubitat Event Socket Prod",
         "server": "",
         "client": "2dc2e126.6a7bae",
-        "x": 177,
-        "y": 95,
+        "x": 262.51220703125,
+        "y": 105.0048828125,
         "wires": [
             [
-                "b567620.453d2a"
+                "a20972a5.9a575"
             ]
         ]
     },
     {
-        "id": "b770b416.7af528",
+        "id": "802d8cbb.a98e5",
         "type": "function",
-        "z": "bbbd03f4.c46cf",
+        "z": "97173ff6.e5ddd",
         "name": "Set Influx Data",
         "func": "\nconst ACTIVE = 'active';\nconst CLOSED = 'closed';\nconst DETECTED = 'detected';\nconst FOLLOW_SCHEDULE = 'follow schedule';\nconst GOOD = 'good';\nconst HEATING = 'heating';\nconst LOCKED = 'locked';\nconst MUTED = 'muted';\nconst OFF = 'off';\nconst ON = 'on';\nconst OPEN = 'open';\nconst PRESENT = 'present';\nconst PUSHED = 'pushed';\nconst SLEEPING = 'sleeping';\nconst TOUCHED = 'touched';\nconst WET = 'wet';\n\nvar v = {\n    'value' : null,\n    'isBinary' : null\n};\n\nif(msg.name == \"acceleration\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"alarm\") {\n    v.value = (msg.value != OFF ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"button\") {\n    v.value = (msg.value != PUSHED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"carbonMonoxide\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"consumableStatus\") {\n    v.value = (msg.value == GOOD ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"contact\") {\n    v.value = (msg.value == OPEN ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"door\") {\n    v.value = (msg.value != OPEN ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"lock\") {\n    v.value = (msg.value == LOCKED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"motion\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"mute\") {\n    v.value = (msg.value == MUTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"presence\") {\n    v.value = (msg.value == PRESENT ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"shock\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"sleeping\") {\n    v.value = (msg.value == SLEEPING ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"smoke\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"sound\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"switch\") {\n    v.value = (msg.value == ON ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"tamper\") {\n    v.value = (msg.value == DETECTED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatMode\") {\n    v.value = (msg.value != OFF ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatFanMode\") {\n    v.value = (msg.value != OFF ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatOperatingState\") {\n    v.value = (msg.value == HEATING ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"thermostatSetpointMode\") {\n    v.value = (msg.value != FOLLOW_SCHEDULE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"touch\") {\n    v.value = (msg.value != TOUCHED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"optimisation\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"windowFunction\") {\n    v.value = (msg.value == ACTIVE ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"water\") {\n    v.value = (msg.value == WET ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"windowShade\") {\n    v.value = (msg.value == CLOSED ? 1 : 0);\n    v.isBinary = true;\n}\n\nelse if(msg.name == \"threeAxis\") {\n    var vz = msg.value.split(',');\n    var x = vz[0];\n    var y = vz[1];\n    var z = vz[2];\n    v.value = {\n        x: vz[0],\n        y: vz[1],\n        z: vz[2]\n    };\n    v.isBinary = false;\n}\nelse if (msg.value.match(/.*[^0-9\\.,-].*/)) { // match if any characters are not digits, period, comma, or hyphen.\n    v.value = '\"' + msg.value + '\"';\n    v.isBinary = false;\n}\n\n// Catch any other general numerical event (carbonDioxide, power, energy, humidity, level, temperature, ultravioletIndex, voltage, etc).\nelse {\n    v.value = Number(msg.value);\n    v.isBinary = false;\n}\nif (msg.name == \"threeAxis\"){\n    msg.payload = [\n        {\n            measurement: msg.name,\n            fields: {\n                valueX: v.value.x,\n                valueY: v.value.y,\n                valueZ: v.value.z\n            },\n            tags:{\n                hub: msg.hubId ? msg.hubId : \"HE1\",\n                deviceId: msg.deviceId,\n                displayName: msg.displayName,\n                unit: msg.unit\n            },\n            timestamp: new Date()\n        }\n    ]\n} else if (v.isBinary)\n{\n    msg.payload = [\n        {\n            measurement: msg.name,\n            fields: {\n                value: msg.value,\n                valueBinary: v.value\n            },\n            tags:{\n                hub: msg.hubId ? msg.hubId : \"HE1\",\n                deviceId: msg.deviceId,\n                displayName: msg.displayName,\n                unit: msg.unit\n            },\n            timestamp: new Date()\n        }\n    ]    \n}\nelse\n{\n    msg.payload = [\n        {\n            measurement: msg.name,\n            fields: {\n                value: (Array.isArray(v.value) ? v.value.join(',') : v.value),\n            },\n            tags:{\n                hub: msg.hubId ? msg.hubId : \"HE1\",\n                deviceId: msg.deviceId,\n                displayName: msg.displayName,\n                unit: msg.unit\n            },\n            timestamp: new Date()\n        }\n    ]\n}\n//console.log(util.inspect(msg, {showHidden: false, depth: null}))\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 588,
-        "y": 96,
+        "x": 673.51220703125,
+        "y": 106.0048828125,
         "wires": [
             [
-                "b57f888.d44e978"
+                "70bab62e.e8dd18"
             ]
         ]
     },
     {
-        "id": "b57f888.d44e978",
+        "id": "70bab62e.e8dd18",
         "type": "influxdb batch",
-        "z": "bbbd03f4.c46cf",
+        "z": "97173ff6.e5ddd",
         "influxdb": "3de4678f.7ce138",
         "precision": "",
         "retentionPolicy": "",
         "name": "",
-        "x": 805,
-        "y": 96,
+        "x": 890.51220703125,
+        "y": 106.0048828125,
         "wires": []
     },
     {
-        "id": "b567620.453d2a",
+        "id": "a20972a5.9a575",
         "type": "filter",
-        "z": "bbbd03f4.c46cf",
+        "z": "97173ff6.e5ddd",
         "name": "Filter attributes",
         "property": "name",
         "propertyType": "msg",
@@ -357,11 +357,11 @@
         ],
         "checkall": "false",
         "outputs": 1,
-        "x": 390.01220703125,
-        "y": 95.0048828125,
+        "x": 475.5244140625,
+        "y": 105.009765625,
         "wires": [
             [
-                "b770b416.7af528"
+                "802d8cbb.a98e5"
             ]
         ]
     },
